@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+// 🔽 2行追加
+use App\Models\User;
+use App\Models\Tweet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,9 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'comment' => fake()->sentence,
+            'user_id' => User::factory(),
+            'tweet_id' => Tweet::factory()
         ];
     }
 }
