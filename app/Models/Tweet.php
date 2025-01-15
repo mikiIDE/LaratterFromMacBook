@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tweet extends Model
 {
-    /** @use HasFactory<\Database\Factories\TweetFactory> */
-    use HasFactory;
+  /** @use HasFactory<\Database\Factories\TweetFactory> */
+  use HasFactory;
 
   protected $fillable = ['tweet'];
 
@@ -16,9 +16,16 @@ class Tweet extends Model
   {
     return $this->belongsTo(User::class);
   }
+  
   // 🔽 追加
   public function liked()
   {
-      return $this->belongsToMany(User::class)->withTimestamps();
+    return $this->belongsToMany(User::class)->withTimestamps();
+  }
+
+  // 🔽 1対多の関係
+  public function comments()
+  {
+    return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
   }
 }
