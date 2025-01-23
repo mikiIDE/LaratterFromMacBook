@@ -37,7 +37,8 @@ class TweetPolicy
      */
     public function update(User $user, Tweet $tweet): bool
     {
-        return false;
+        // 🔽 追加(資料3.27)
+        return $user->id === $tweet->user_id;
     }
 
     /**
