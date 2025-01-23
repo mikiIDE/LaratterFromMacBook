@@ -9,6 +9,8 @@ use App\Models\Tweet;
 use Illuminate\Http\Request;
 // 🔽 追加
 use App\Services\TweetService;
+// 🔽 追加(資料3.27)
+use Illuminate\Support\Facades\Gate;
 
 class TweetController extends Controller
 {
@@ -24,6 +26,8 @@ class TweetController extends Controller
      */
     public function index()
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('viewAny', Tweet::class);
         // 🔽 編集
         $tweets = $this->tweetService->allTweets();
         return view('tweets.index', compact('tweets'));
@@ -37,6 +41,8 @@ class TweetController extends Controller
      */
     public function create()
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('create', Tweet::class);
         // 🔽 追加
         return view('tweets.create');
     }
@@ -46,6 +52,8 @@ class TweetController extends Controller
      */
     public function store(StoreTweetRequest $request)
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('create', Tweet::class);
         // バリデーションは削除
         $tweet = $this->tweetService->createTweet($request);
         return redirect()->route('tweets.index');
@@ -56,7 +64,9 @@ class TweetController extends Controller
      */
     public function show(Tweet $tweet)
     {
-        $tweet->load('comments');
+        // 🔽 追加(資料3.27)
+        Gate::authorize('view', $tweet);
+        // $tweet->load('comments');
         return view('tweets.show', compact('tweet'));
     }
 
@@ -65,6 +75,8 @@ class TweetController extends Controller
      */
     public function edit(Tweet $tweet)
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('update', $tweet);
         return view('tweets.edit', compact('tweet'));
     }
 
@@ -74,14 +86,11 @@ class TweetController extends Controller
     // 🔽 編集
     public function update(UpdateTweetRequest $request, Tweet $tweet)
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('update', $tweet);
         // バリデーションは削除
         $updatedTweet = $this->tweetService->updateTweet($request, $tweet);
         return redirect()->route('tweets.show', $tweet);
-        // 🔽 編集
-        // $this->tweetService->updateTweet($request, $tweet);
-        // return redirect()->route('tweets.show', $tweet);
-        // $tweet->update($request->only('tweet'));
-        // return redirect()->route('tweets.show', $tweet);
     }
 
     /**
@@ -89,10 +98,10 @@ class TweetController extends Controller
      */
     public function destroy(Tweet $tweet)
     {
+        // 🔽 追加(資料3.27)
+        Gate::authorize('delete', $tweet);
         // 🔽 編集
         $this->tweetService->deleteTweet($tweet);
         return redirect()->route('tweets.index');
-        // $tweet->delete();
-        // return redirect()->route('tweets.index');
     }
 }
